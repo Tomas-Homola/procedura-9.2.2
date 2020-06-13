@@ -1,5 +1,5 @@
 #include <stdio.h>
-#inlcude <stdlib.h>
+#include <stdlib.h>
 
 #define ELEM(M, num, row, column) (M[r*C+c])
 
@@ -26,6 +26,8 @@ TDMAT *tdmat_create_with_type(unsigned int size) // vytvorenie miesta pre maticu
 	
 	tdm->Ldiag = (float*)malloc(sizeof(float) * (size - 1));
 	if (tdm->Ldiag == NULL) return NULL;
+	
+	return tdm;
 }
 
 main()
