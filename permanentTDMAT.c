@@ -3,7 +3,7 @@
 
 #define ELEM(M, rNum, row, column) (M[row*rNum+culumn])
 
-typedef struct
+typedef struct // riedka reprezentacia matice
 {
 	unsigned int size;
 	float *Udiag;
@@ -12,12 +12,18 @@ typedef struct
 
 }TDMAT;
 
+typedef struct // husta reprezentacia matice
+{
+	unsigned int size;
+	float *elem;
+} MAT;
+
 void done(char msg[])
 {
 	printf("%s done\n", msg);
 }
 
-TDMAT *tdmat_create_with_type(unsigned int size) // vytvorenie miesta pre maticu
+TDMAT *tdmat_create_with_type(unsigned int size) // vytvorenie miesta pre tridiagonalnu maticu
 {
 	TDMAT *tdm = (TDMAT*)malloc(sizeof(TDMAT));
 	
@@ -27,7 +33,7 @@ TDMAT *tdmat_create_with_type(unsigned int size) // vytvorenie miesta pre maticu
 	
 	tdm->size = size;
 	
-	tdm->Udiag = (float*)malloc(sizeof(float) * (size - 1)); // size - 1, lebo "udiag" a "ldiag" maju o jeden prvok menej ako "diag"
+	tdm->Udiag = (float*)malloc(sizeof(float) * (size - 1)); // size - 1, lebo "Udiag" a "Ldiag" maju o jeden prvok menej ako "diag"
 	if (tdm->Udiag == NULL) return NULL;
 	
 	tdm->diag = (float*)malloc(sizeof(float) * size);
@@ -39,6 +45,18 @@ TDMAT *tdmat_create_with_type(unsigned int size) // vytvorenie miesta pre maticu
 	return tdm;
 }
 
+MAT *mat_create(unsigned int size) // obycajna reprezentacia matice
+{
+	MAT *mat = (MAT*)malloc(sizeof(MAT));
+	if (mat == NULL) return NULL;
+	
+	mat->size = size;
+	
+	mat->elem = (float*)malloc(sizeof(float)*size*size);
+	if (mat->elem == NULL) return NULL;
+	
+	return mat;
+}
 
 void tdmat_destroy(TDMAT *tdm) // "vycistenie miesta" po matici
 {
@@ -136,6 +154,16 @@ void tdmat_print(TDMAT *tdm)
 	done("print");
 }
 
+float mat_permanent(MAT *mat) // vypocet permanentu "obycajnej" matice
+{
+	
+}
+
+float tdmat_permanent(TDMAT *tdm) // vypocet permanentu tridiagonalnej matice
+{
+	
+}
+
 main()
 {
 	srand(time(0));
@@ -143,21 +171,21 @@ main()
 	unsigned int size;
 	unsigned int i;
 	float num;
-	
+
 	num = 1.0;
 	
 	printf("Zadaj rozmer (stvorcovej) matice:\n");
 	scanf("%d", &size);
 	
-	tdm = tdmat_create_with_type(size);
+	tdm = tdmat_create_with_type(size); // vytvorenie
 
-	tdmat_unit(tdm);
-	tdmat_print(tdm);
+	tdmat_unit(tdm); // zadanie hodnot na identity matrix
+	tdmat_print(tdm); // vypis matice
 	
-	tdmat_random(tdm);
-	tdmat_print(tdm);
+	tdmat_random(tdm); // zdanie hodnot na nahodne float cisla
+	tdmat_print(tdm); // vypis matice
 	
-	tdmat_destroy(tdm);
+	tdmat_destroy(tdm); // "znicenie matice"
 	
 	
 	printf("\n\nTask failed successufully.\n");
