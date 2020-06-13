@@ -113,7 +113,7 @@ void tdmat_random(TDMAT *tdm) // nahodne prvky na diag, Udiag a Ldiag
 
 void tdmat_print(TDMAT *tdm)
 {
-	int i, j, d = 0, Ud = 0, Ld = 0, zero = 0;
+	int i, j, d = 0, Ud = 0, Ld = 0;
 	
 	for (i = 0; i < tdm->size; i++)
 	{
@@ -127,7 +127,7 @@ void tdmat_print(TDMAT *tdm)
 				{
 					if (tdm->Udiag[Ud] == 0.0)
 					{
-						printf("%10d", zero);
+						printf("%10d", 0);
 					} else
 						{
 							printf("%10.4f", tdm->Udiag[Ud]);
@@ -137,7 +137,7 @@ void tdmat_print(TDMAT *tdm)
 					{
 						if (tdm->Ldiag[Ld] == 0.0)
 						{
-							printf("%10d", zero);
+							printf("%10d", 0);
 						} else
 							{
 								printf("%10.4f", tdm->Ldiag[Ld]);
@@ -145,7 +145,7 @@ void tdmat_print(TDMAT *tdm)
 							}
 					} else
 						{
-							printf("%10d", zero);
+							printf("%10d", 0);
 						}
 		}
 		printf("\n");
