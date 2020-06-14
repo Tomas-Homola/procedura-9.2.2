@@ -175,12 +175,31 @@ float mat_permanent(MAT *mat) // vypocet permanentu "obycajnej" matice
 
 float tdmat_permanent(TDMAT *tdm) // vypocet permanentu tridiagonalnej matice
 {
-	int i,j;
-	
-	for (i = 0; i < tdm->size; i++)
+	if (tdm->size == 1) return tdm->diag[0];
+	else if (tdm->size == 2) return (tdm->diag[0] * tdm->diag[1] - (tdm->Ldiag[0] * tdm->Udiag[0]));
+	else
 	{
-		
+		int i,j, col;
+		float permanent = 0.0;
+	
+		for (col = 0; col < tdm->size; col++)
+		{
+			MAT *mat;
+			mat = mat_create(tdm->size - 1);
+			
+			for (i = 0; i < (tdm->size - 1); i++)
+			{
+				for (j = 0; j < (tdm->size - 1); j++)
+				{
+					if (i == col)
+					{
+						
+					}
+				}
+			}
+		}	
 	}
+	
 }
 
 main()
@@ -203,6 +222,8 @@ main()
 	
 	tdmat_random(tdm); // zdanie hodnot na nahodne float cisla
 	tdmat_print(tdm); // vypis matice
+	
+	printf("permnent: %.4f\n", tdmat_permanent(tdm)); // vypis permanentu
 	
 	tdmat_destroy(tdm); // "znicenie matice"
 	
