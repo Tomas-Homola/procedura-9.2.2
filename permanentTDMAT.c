@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define ELEM(M, rNum, row, column) (M[row*rNum+culumn])
-
 typedef struct // riedka reprezentacia matice
 {
 	unsigned int size;
@@ -167,6 +165,20 @@ void tdmat_print(TDMAT *tdm)
 	//done("print");
 }
 
+void mat_print(MAT *mat)
+{
+	int i, j;
+	
+	for (i = 0; i < mat->size; i++)
+	{
+		for (j = 0; j < mat->size; j++)
+		{
+			printf("%10.4f", mat->elem[i * mat->size + j]);
+		}
+		printf("\n");
+	}
+}
+
 float mat_permanent(MAT *mat) // vypocet permanentu "obycajnej" matice
 {
 	int i,j;
@@ -179,24 +191,53 @@ float tdmat_permanent(TDMAT *tdm) // vypocet permanentu tridiagonalnej matice
 	else if (tdm->size == 2) return (tdm->diag[0] * tdm->diag[1] - (tdm->Ldiag[0] * tdm->Udiag[0]));
 	else
 	{
-		int i,j, col;
+		int i,j, col, indexMat = 0, d = 1, Ud = 1, Ld = 0, helpd = 1, helpUd = 1, helpLd = 0;
 		float permanent = 0.0;
 	
-		for (col = 0; col < tdm->size; col++)
+		for (col = 0; col < tdm->size; col++) // cyklus pre rozvoj
 		{
-			MAT *mat;
-			mat = mat_create(tdm->size - 1);
+			MAT *mat; 
+			mat = mat_create((tdm->size - 1)); // vytvorenie obycajnej matice, do ktorej sa ulozi "minor matica" tridiagonalnej matice "tdm"
 			
-			for (i = 0; i < (tdm->size - 1); i++)
+			for (i = 1; i < tdm->size; i++)
 			{
-				for (j = 0; j < (tdm->size - 1); j++)
+				for (j = 0; j < tdm->size; j++)
 				{
-					if (i == col)
+					if (j != col)
 					{
-						
+						if (i == j) // prvok hlavnej diagonaly
+						{
+							mat->elem[indexMat] = tdm->diag[d];
+							indexMat++;
+							d++;
+						} else if ((j - 1) == i) // prvok superdiagonaly
+							{
+								mat->elem[indexMat] = tdm->Udiag[Ud];
+								indexMat++;
+								Ud++;
+							} else if ((j + 1) == i) // prvok subdiagonaly
+								{
+									mat->elem[indexMat] = tdm->Ldiag[Ld];
+									indexMat++;
+									Ld++;
+								} else // inak nula
+									{
+										mat->elem[indexMat] = 0.0;
+										indexMat++;
+									}	
+									
 					}
 				}
 			}
+			
+			//permanent += mat_permanent(mat); // vypocet permanentu "minor matice",
+			mat_print(mat);
+			printf("\n");
+			
+			mat_destroy(mat); 
+			
+			indexMat = 0, d = 1, Ud = 1, Ld = 0;
+			
 		}	
 	}
 	
@@ -223,7 +264,9 @@ main()
 	tdmat_random(tdm); // zdanie hodnot na nahodne float cisla
 	tdmat_print(tdm); // vypis matice
 	
-	printf("permnent: %.4f\n", tdmat_permanent(tdm)); // vypis permanentu
+	int test;
+	test = tdmat_permanent(tdm);
+	//printf("permnent: %.4f\n", tdmat_permanent(tdm)); // vypis permanentu
 	
 	tdmat_destroy(tdm); // "znicenie matice"
 	
