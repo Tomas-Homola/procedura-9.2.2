@@ -9,7 +9,6 @@ typedef struct // riedka reprezentacia matice
 	float *Udiag;
 	float *diag;
 	float *Ldiag;
-
 }TDMAT;
 
 typedef struct // husta reprezentacia matice
@@ -26,10 +25,8 @@ void done(char msg[])
 TDMAT *tdmat_create_with_type(unsigned int size) // vytvorenie miesta pre tridiagonalnu maticu
 {
 	TDMAT *tdm = (TDMAT*)malloc(sizeof(TDMAT));
-	
-	//printf("alokovana adresa: %p\n", tdm);
-	
 	if (tdm == NULL) return NULL;
+	//printf("alokovana adresa: %p\n", tdm);
 	
 	tdm->size = size;
 	
@@ -58,15 +55,22 @@ MAT *mat_create(unsigned int size) // obycajna reprezentacia matice
 	return mat;
 }
 
-void tdmat_destroy(TDMAT *tdm) // "vycistenie miesta" po matici
+void tdmat_destroy(TDMAT *tdm) // "vycistenie miesta" po tridiagonalnej matici
 {
  	free(tdm->Udiag);
  	free(tdm->diag);
  	free(tdm->Ldiag);
- 	
- 	free(tdm);
- 	
- 	done("destroy");
+     
+     free(tdm);
+     	
+ 	//done("destroy");
+}
+
+void mat_destroy(MAT *mat) // "vycistenie miesta" po obycajnej matici
+{
+	free(mat->elem);
+	
+	free(mat);		
 }
 
 void tdmat_unit(TDMAT *tdm) // identity matrix
@@ -86,7 +90,7 @@ void tdmat_unit(TDMAT *tdm) // identity matrix
 	}
 	
 	
-	done("unit");
+	//done("unit");
 }
 
 void tdmat_random(TDMAT *tdm) // nahodne prvky na diag, Udiag a Ldiag
@@ -108,12 +112,12 @@ void tdmat_random(TDMAT *tdm) // nahodne prvky na diag, Udiag a Ldiag
 		tdm->Ldiag[i] = num;
 	}
 	
-	done("random");
+	//done("random");
 }
 
 void tdmat_print(TDMAT *tdm)
 {
-	int i, j, d = 0, Ud = 0, Ld = 0;
+	int i, j, d = 0, Ud = 0, Ld = 0; // d, Ud a Ld 
 	
 	for (i = 0; i < tdm->size; i++)
 	{
@@ -121,13 +125,21 @@ void tdmat_print(TDMAT *tdm)
 		{
 			if (i == j) 
 			{
+				if (tdm->diag[d] == 1.0)
+				{
+					printf("%10d", 1);
+					d++;
+				} else
+				{
 				printf("%10.4f", tdm->diag[d]);
 				d++;
+				}
 			} else if ((j - 1) == i)
 				{
 					if (tdm->Udiag[Ud] == 0.0)
 					{
 						printf("%10d", 0);
+						Ud++;
 					} else
 						{
 							printf("%10.4f", tdm->Udiag[Ud]);
@@ -138,6 +150,7 @@ void tdmat_print(TDMAT *tdm)
 						if (tdm->Ldiag[Ld] == 0.0)
 						{
 							printf("%10d", 0);
+							Ld++;
 						} else
 							{
 								printf("%10.4f", tdm->Ldiag[Ld]);
@@ -150,18 +163,24 @@ void tdmat_print(TDMAT *tdm)
 		}
 		printf("\n");
 	}
-	
-	done("print");
+	printf("\n");
+	//done("print");
 }
 
 float mat_permanent(MAT *mat) // vypocet permanentu "obycajnej" matice
 {
-	
+	int i,j;
+		
 }
 
 float tdmat_permanent(TDMAT *tdm) // vypocet permanentu tridiagonalnej matice
 {
+	int i,j;
 	
+	for (i = 0; i < tdm->size; i++)
+	{
+		
+	}
 }
 
 main()
