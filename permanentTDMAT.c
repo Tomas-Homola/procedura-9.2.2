@@ -197,7 +197,7 @@ float tdmat_permanent(TDMAT *tdm) // vypocet permanentu tridiagonalnej matice
 	else if (tdm->size == 2) return (tdm->diag[0] * tdm->diag[1] - (tdm->Ldiag[0] * tdm->Udiag[0]));
 	else
 	{
-		int i,j, col, indexMat = 0, d = 1, Ud = 1, Ld = 1, helpd = 1, helpUd = 1, helpLd = 0;
+		int i,j, col, indexMat = 0, d = 1, Ud = 1, Ld = 0, helpd, helpUd, helpLd; // #este Ld hodnota
 		float permanent = 0.0;
 	
 		for (col = 0; col < tdm->size; col++) // cyklus pre rozvoj
@@ -207,37 +207,49 @@ float tdmat_permanent(TDMAT *tdm) // vypocet permanentu tridiagonalnej matice
 			
 			for (i = 1; i < tdm->size; i++)
 			{
+				helpd = 0, helpUd = 0, helpLd = 0;
+				
 				for (j = 0; j < tdm->size; j++)
 				{
 					if (j != col)
 					{
 						if (i == j) // prvok hlavnej diagonaly
 						{
-							//printf("d pred = %d\n", d);
 							mat->elem[indexMat] = tdm->diag[d];
 							indexMat++;
 							d++;
-							//printf("d po = %d\n", d);
+							helpd++; // d bolo zmenene
+							
+							if (helpLd == 0) Ld++;
+							
 						} else if ((j - 1) == i) // prvok superdiagonaly
 							{
 								mat->elem[indexMat] = tdm->Udiag[Ud];
 								indexMat++;
 								Ud++;
+								helpUd++;
+								
+								if (helpd == 0) d++;
+								
 							} else if ((j + 1) == i) // prvok subdiagonaly
 								{
 									mat->elem[indexMat] = tdm->Ldiag[Ld];
 									indexMat++;
 									Ld++;
+									helpLd++;
 								} else // inak nula
 									{
 										mat->elem[indexMat] = 0.0;
 										indexMat++;
 									}
-					if (Ld == (tdm->size - 2)) Ld = 0;
 					
-					if (d == (tdm->size - 1)) d = 1;
+					if (helpUd == 1) Ud++;
 					
-					if (Ud == (tdm->size - 2)) Ud = 1;
+					if (Ld == (tdm->size - 1)) Ld = 0;
+					
+					if (d == (tdm->size)) d = 1;
+					
+					if (Ud == (tdm->size - 1)) Ud = 1;
 									
 					}
 				}
