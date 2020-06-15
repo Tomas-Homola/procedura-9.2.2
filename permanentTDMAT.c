@@ -99,14 +99,17 @@ void tdmat_random(TDMAT *tdm) // nahodne prvky na diag, Udiag a Ldiag
 	for (i = 0; i < tdm->size; i++) // hlavna diagonala
 	{
 		num = -1 + ((float)rand()/(float)(RAND_MAX)) * 2;
+		//num = 1.0 + (float)(rand() % 4);
 		tdm->diag[i] = num;
 	}
 	
 	for (i = 0; i < (tdm->size - 1); i++) // super/subdiagonala
 	{
 		num = -1 + ((float)rand()/(float)(RAND_MAX)) * 2;
+		//num = 1.0 + (float)(rand() % 4);
 		tdm->Udiag[i] = num;
 		num = -1 + ((float)rand()/(float)(RAND_MAX)) * 2;
+		//num = 1.0 + (float)(rand() % 4);
 		tdm->Ldiag[i] = num;
 	}
 	
@@ -186,12 +189,44 @@ void mat_print(MAT *mat)
 }
 
 float mat_permanent(MAT *mat) // vypocet permanentu "obycajnej" matice
-{
-	int i,j;
+{	
+	float permanent = 0.0;
 	
 	if (mat->size == 1) return mat->elem[0];
 	else if (mat->size == 2) return (mat->elem[0] * mat->elem[3] + mat->elem[2] * mat->elem[1]);
+	else
+	{
+		int i, j, col = 0, minorMatIndex = 0;
 		
+		for (col = 0; col < mat->size; col++)
+		{
+			MAT *minorMat;
+			minorMat = mat_create(mat->size - 1);
+			
+			minorMatIndex = 0;
+			
+			for (i = 1; i < mat->size; i++)
+			{
+				for (j = 0; j < mat->size; j++)
+				{
+					if (j != col)
+					{
+						minorMat->elem[minorMatIndex] = mat->elem[i * mat->size + j];
+						minorMatIndex++;
+					}
+				}
+			}
+			
+			//printf("minor matica %d:\n", col + 1);
+			//mat_print(minorMat);
+			
+			permanent += mat->elem[col] * mat_permanent(minorMat);
+			
+			mat_destroy(minorMat);
+		}
+	}
+	
+	return permanent;	
 }
 
 float tdmat_permanent(TDMAT *tdm) // vypocet permanentu tridiagonalnej matice
@@ -202,12 +237,12 @@ float tdmat_permanent(TDMAT *tdm) // vypocet permanentu tridiagonalnej matice
 	else if (tdm->size == 2) return (tdm->diag[0] * tdm->diag[1] + tdm->Ldiag[0] * tdm->Udiag[0]);
 	else
 	{
-		int i,j, col, indexMat = 0, d = 1, Ud = 1, Ld = 0, helpd, helpUd, helpLd;
-	
+		int i, j, col, indexMat = 0, d = 1, Ud = 1, Ld = 0, helpd, helpUd, helpLd;
+			
 		for (col = 0; col < 2; col++) // cyklus pre rozvoj
 		{
 			MAT *mat; 
-			mat = mat_create((tdm->size - 1)); // vytvorenie obycajnej matice, do ktorej sa ulozi "minor matica" tridiagonalnej matice "tdm"
+			mat = mat_create(tdm->size - 1); // vytvorenie obycajnej matice, do ktorej sa ulozi "minor matica" tridiagonalnej matice "tdm"
 			
 			for (i = 1; i < tdm->size; i++)
 			{
@@ -265,11 +300,12 @@ float tdmat_permanent(TDMAT *tdm) // vypocet permanentu tridiagonalnej matice
 				}
 			}
 			
-			if (col == 0) permanent += tdm->diag[0] * mat_permanent(mat);
-			else if (col == 1) permanent += tdm->Udiag[0] * mat_permanent(mat);
 			//printf("matica %d:\n", col + 1);
 			//mat_print(mat);
 			//printf("\n");
+			
+			if (col == 0) permanent += tdm->diag[0] * mat_permanent(mat);
+			else if (col == 1) permanent += tdm->Udiag[0] * mat_permanent(mat);
 			
 			mat_destroy(mat); 
 			
@@ -286,10 +322,6 @@ main()
 	srand(time(0));
 	TDMAT *tdm;
 	unsigned int size;
-	unsigned int i;
-	float num;
-
-	num = 1.0;
 	
 	printf("Zadaj rozmer (stvorcovej) matice:\n");
 	scanf("%d", &size);
