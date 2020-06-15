@@ -197,7 +197,7 @@ float tdmat_permanent(TDMAT *tdm) // vypocet permanentu tridiagonalnej matice
 	else if (tdm->size == 2) return (tdm->diag[0] * tdm->diag[1] - (tdm->Ldiag[0] * tdm->Udiag[0]));
 	else
 	{
-		int i,j, col, indexMat = 0, d = 1, Ud = 1, Ld = 0, helpd, helpUd, helpLd; // #este Ld hodnota
+		int i,j, col, indexMat = 0, d = 1, Ud = 1, Ld = 0, helpd, helpUd, helpLd;
 		float permanent = 0.0;
 	
 		for (col = 0; col < tdm->size; col++) // cyklus pre rozvoj
@@ -241,13 +241,19 @@ float tdmat_permanent(TDMAT *tdm) // vypocet permanentu tridiagonalnej matice
 									{
 										mat->elem[indexMat] = 0.0;
 										indexMat++;
+										
+										if ((tdm->size % 2) == 0) // kontrola pre spravne posuvanie Ud indexu
+										{
+											if ((helpUd == 0) && (j > (tdm->size / 2))) Ud++;
+										} else 
+											{
+												if ((helpUd == 0) && (j > ((tdm->size / 2) + 1))) Ud++;
+											}
 									}
-					
-					if (helpUd == 1) Ud++;
 					
 					if (Ld == (tdm->size - 1)) Ld = 0;
 					
-					if (d == (tdm->size)) d = 1;
+					if (d == tdm->size) d = 1;
 					
 					if (Ud == (tdm->size - 1)) Ud = 1;
 									
