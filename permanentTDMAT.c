@@ -339,6 +339,5 @@ main()
 	
 	tdmat_destroy(tdm); // "znicenie matice"
 	
-	
 	printf("\n\nTask failed successufully.\n");
 }
