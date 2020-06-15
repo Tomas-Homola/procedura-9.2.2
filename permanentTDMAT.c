@@ -115,7 +115,7 @@ void tdmat_random(TDMAT *tdm) // nahodne prvky na diag, Udiag a Ldiag
 
 void tdmat_print(TDMAT *tdm)
 {
-	int i, j, d = 0, Ud = 0, Ld = 0; // d, Ud a Ld 
+	int i, j, d = 0, Ud = 0, Ld = 0; // d, Ud a Ld na indexi prvkov pre diag, Udiag a Ldiag
 	
 	for (i = 0; i < tdm->size; i++)
 	{
@@ -188,19 +188,23 @@ void mat_print(MAT *mat)
 float mat_permanent(MAT *mat) // vypocet permanentu "obycajnej" matice
 {
 	int i,j;
+	
+	if (mat->size == 1) return mat->elem[0];
+	else if (mat->size == 2) return (mat->elem[0] * mat->elem[3] + mat->elem[2] * mat->elem[1]);
 		
 }
 
 float tdmat_permanent(TDMAT *tdm) // vypocet permanentu tridiagonalnej matice
 {
+	float permanent = 0.0;
+	
 	if (tdm->size == 1) return tdm->diag[0];
-	else if (tdm->size == 2) return (tdm->diag[0] * tdm->diag[1] - (tdm->Ldiag[0] * tdm->Udiag[0]));
+	else if (tdm->size == 2) return (tdm->diag[0] * tdm->diag[1] + tdm->Ldiag[0] * tdm->Udiag[0]);
 	else
 	{
 		int i,j, col, indexMat = 0, d = 1, Ud = 1, Ld = 0, helpd, helpUd, helpLd;
-		float permanent = 0.0;
 	
-		for (col = 0; col < tdm->size; col++) // cyklus pre rozvoj
+		for (col = 0; col < 2; col++) // cyklus pre rozvoj
 		{
 			MAT *mat; 
 			mat = mat_create((tdm->size - 1)); // vytvorenie obycajnej matice, do ktorej sa ulozi "minor matica" tridiagonalnej matice "tdm"
@@ -261,10 +265,11 @@ float tdmat_permanent(TDMAT *tdm) // vypocet permanentu tridiagonalnej matice
 				}
 			}
 			
-			//permanent += mat_permanent(mat); // vypocet permanentu "minor matice",
-			printf("matica %d:\n", col + 1);
-			mat_print(mat);
-			printf("\n");
+			if (col == 0) permanent += tdm->diag[0] * mat_permanent(mat);
+			else if (col == 1) permanent += tdm->Udiag[0] * mat_permanent(mat);
+			//printf("matica %d:\n", col + 1);
+			//mat_print(mat);
+			//printf("\n");
 			
 			mat_destroy(mat); 
 			
@@ -273,6 +278,7 @@ float tdmat_permanent(TDMAT *tdm) // vypocet permanentu tridiagonalnej matice
 		}	
 	}
 	
+	return permanent;
 }
 
 main()
@@ -296,7 +302,7 @@ main()
 	tdmat_random(tdm); // zdanie hodnot na nahodne float cisla
 	tdmat_print(tdm); // vypis matice
 	
-	printf("permnent: %.4f\n", tdmat_permanent(tdm)); // vypis permanentu
+	printf("permanent: %.4f\n", tdmat_permanent(tdm)); // vypis permanentu
 	
 	tdmat_destroy(tdm); // "znicenie matice"
 	
