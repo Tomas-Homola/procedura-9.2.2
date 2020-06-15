@@ -99,7 +99,7 @@ void tdmat_random(TDMAT *tdm) // nahodne prvky na diag, Udiag a Ldiag
 	for (i = 0; i < tdm->size; i++) // hlavna diagonala
 	{
 		num = -1 + ((float)rand()/(float)(RAND_MAX)) * 2;
-		//num = 1.0 + (float)(rand() % 4);
+		//num = 1.0 + (float)(rand() % 4); // "int" hodnota
 		tdm->diag[i] = num;
 	}
 	
@@ -108,6 +108,7 @@ void tdmat_random(TDMAT *tdm) // nahodne prvky na diag, Udiag a Ldiag
 		num = -1 + ((float)rand()/(float)(RAND_MAX)) * 2;
 		//num = 1.0 + (float)(rand() % 4);
 		tdm->Udiag[i] = num;
+		
 		num = -1 + ((float)rand()/(float)(RAND_MAX)) * 2;
 		//num = 1.0 + (float)(rand() % 4);
 		tdm->Ldiag[i] = num;
@@ -334,7 +335,7 @@ main()
 	tdmat_random(tdm); // zdanie hodnot na nahodne float cisla
 	tdmat_print(tdm); // vypis matice
 	
-	printf("permanent: %.4f\n", tdmat_permanent(tdm)); // vypis permanentu
+	printf("Permanent matice = %.5f\n", tdmat_permanent(tdm)); // vypis permanentu
 	
 	tdmat_destroy(tdm); // "znicenie matice"
 	
