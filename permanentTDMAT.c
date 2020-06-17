@@ -99,7 +99,7 @@ void tdmat_random(TDMAT *tdm) // nahodne prvky na diag, Udiag a Ldiag
 	for (i = 0; i < tdm->size; i++) // hlavna diagonala
 	{
 		num = -1 + ((float)rand()/(float)(RAND_MAX)) * 2;
-		//num = 1.0 + (float)(rand() % 4); // "int" hodnota
+		//num = 1.0 + (float)(rand() % 4); // "int" hodnota pre lepsiu kontrolu vypoctu
 		tdm->diag[i] = num;
 	}
 	
@@ -201,6 +201,8 @@ float mat_permanent(MAT *mat) // vypocet permanentu "obycajnej" matice
 		
 		for (col = 0; col < mat->size; col++)
 		{
+			if (mat->elem[col] != 0) // ak prvok matice [0, col] == 0, tak netreba nic pocitat
+			{
 			MAT *minorMat;
 			minorMat = mat_create(mat->size - 1);
 			
@@ -220,10 +222,10 @@ float mat_permanent(MAT *mat) // vypocet permanentu "obycajnej" matice
 			
 			//printf("minor matica %d:\n", col + 1);
 			//mat_print(minorMat);
-			
 			permanent += mat->elem[col] * mat_permanent(minorMat);
 			
 			mat_destroy(minorMat);
+			}
 		}
 	}
 	
