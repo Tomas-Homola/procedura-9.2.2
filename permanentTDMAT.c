@@ -98,18 +98,18 @@ void tdmat_random(TDMAT *tdm) // nahodne prvky na diag, Udiag a Ldiag
 	
 	for (i = 0; i < tdm->size; i++) // hlavna diagonala
 	{
-		num = -1 + ((float)rand()/(float)(RAND_MAX)) * 2;
+		num = -1.0 + ((float)rand()/(float)(RAND_MAX)) * 2.0;
 		//num = 1.0 + (float)(rand() % 4); // "int" hodnota pre lepsiu kontrolu vypoctu
 		tdm->diag[i] = num;
 	}
 	
 	for (i = 0; i < (tdm->size - 1); i++) // super/subdiagonala
 	{
-		num = -1 + ((float)rand()/(float)(RAND_MAX)) * 2;
+		num = -1.0 + ((float)rand()/(float)(RAND_MAX)) * 2.0;
 		//num = 1.0 + (float)(rand() % 4);
 		tdm->Udiag[i] = num;
 		
-		num = -1 + ((float)rand()/(float)(RAND_MAX)) * 2;
+		num = -1.0 + ((float)rand()/(float)(RAND_MAX)) * 2.0;
 		//num = 1.0 + (float)(rand() % 4);
 		tdm->Ldiag[i] = num;
 	}
