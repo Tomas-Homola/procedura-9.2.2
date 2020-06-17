@@ -15,16 +15,10 @@ typedef struct // husta reprezentacia matice
 	float *elem;
 } MAT;
 
-void done(char msg[])
-{
-	printf("%s done\n", msg);
-}
-
 TDMAT *tdmat_create_with_type(unsigned int size) // vytvorenie miesta pre tridiagonalnu maticu
 {
 	TDMAT *tdm = (TDMAT*)malloc(sizeof(TDMAT));
 	if (tdm == NULL) return NULL;
-	//printf("alokovana adresa: %p\n", tdm);
 	
 	tdm->size = size;
 	
@@ -60,8 +54,6 @@ void tdmat_destroy(TDMAT *tdm) // "vycistenie miesta" po tridiagonalnej matici
  	free(tdm->Ldiag);
      
      free(tdm);
-     	
- 	//done("destroy");
 }
 
 void mat_destroy(MAT *mat) // "vycistenie miesta" po obycajnej matici
@@ -86,9 +78,6 @@ void tdmat_unit(TDMAT *tdm) // identity matrix
 		tdm->Udiag[i] = 0.0;
 		tdm->Ldiag[i] = 0.0;
 	}
-	
-	
-	//done("unit");
 }
 
 void tdmat_random(TDMAT *tdm) // nahodne prvky na diag, Udiag a Ldiag
@@ -99,22 +88,17 @@ void tdmat_random(TDMAT *tdm) // nahodne prvky na diag, Udiag a Ldiag
 	for (i = 0; i < tdm->size; i++) // hlavna diagonala
 	{
 		num = -1.0 + ((float)rand()/(float)(RAND_MAX)) * 2.0;
-		//num = 1.0 + (float)(rand() % 4); // "int" hodnota pre lepsiu kontrolu vypoctu
 		tdm->diag[i] = num;
 	}
 	
 	for (i = 0; i < (tdm->size - 1); i++) // super/subdiagonala
 	{
 		num = -1.0 + ((float)rand()/(float)(RAND_MAX)) * 2.0;
-		//num = 1.0 + (float)(rand() % 4);
 		tdm->Udiag[i] = num;
 		
 		num = -1.0 + ((float)rand()/(float)(RAND_MAX)) * 2.0;
-		//num = 1.0 + (float)(rand() % 4);
 		tdm->Ldiag[i] = num;
 	}
-	
-	//done("random");
 }
 
 void tdmat_print(TDMAT *tdm)
@@ -166,7 +150,6 @@ void tdmat_print(TDMAT *tdm)
 		printf("\n");
 	}
 	printf("\n");
-	//done("print");
 }
 
 void mat_print(MAT *mat)
@@ -220,8 +203,6 @@ float mat_permanent(MAT *mat) // vypocet permanentu "obycajnej" matice
 				}
 			}
 			
-			//printf("minor matica %d:\n", col + 1);
-			//mat_print(minorMat);
 			permanent += mat->elem[col] * mat_permanent(minorMat);
 			
 			mat_destroy(minorMat);
@@ -303,17 +284,12 @@ float tdmat_permanent(TDMAT *tdm) // vypocet permanentu tridiagonalnej matice
 				}
 			}
 			
-			//printf("matica %d:\n", col + 1);
-			//mat_print(mat);
-			//printf("\n");
-			
 			if (col == 0) permanent += tdm->diag[0] * mat_permanent(mat);
 			else if (col == 1) permanent += tdm->Udiag[0] * mat_permanent(mat);
 			
 			mat_destroy(mat); 
 			
-			indexMat = 0, d = 1, Ud = 1, Ld = 0;
-			
+			indexMat = 0, d = 1, Ud = 1, Ld = 0;		
 		}	
 	}
 	
