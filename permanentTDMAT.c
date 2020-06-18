@@ -22,14 +22,32 @@ TDMAT *tdmat_create_with_type(unsigned int size) // vytvorenie miesta pre tridia
 	
 	tdm->size = size;
 	
-	tdm->Udiag = (float*)malloc(sizeof(float) * (size - 1)); // size - 1, lebo "Udiag" a "Ldiag" maju o jeden prvok menej ako "diag"
-	if (tdm->Udiag == NULL) return NULL;
+	tdm->Udiag = (float*)malloc(sizeof(float) * (size - 1));
+	if (tdm->Udiag == NULL)
+	{
+		 free(tdm);
+		 
+		 return NULL;
+	}
 	
 	tdm->diag = (float*)malloc(sizeof(float) * size);
-	if (tdm->diag == NULL) return NULL;
+	if (tdm->diag == NULL)
+	{
+		free(tdm->Udiag);
+		free(tdm);
+		
+		return NULL;
+	}
 	
 	tdm->Ldiag = (float*)malloc(sizeof(float) * (size - 1));
-	if (tdm->Ldiag == NULL) return NULL;
+	if (tdm->Ldiag == NULL)
+	{
+		free(tdm->Udiag);
+		free(tdm->diag);
+		free(tdm);
+		
+		return NULL;
+	}
 	
 	return tdm;
 }
@@ -42,7 +60,12 @@ MAT *mat_create(unsigned int size) // obycajna reprezentacia matice
 	mat->size = size;
 	
 	mat->elem = (float*)malloc(sizeof(float)*size*size);
-	if (mat->elem == NULL) return NULL;
+	if (mat->elem == NULL)
+	{
+		free(mat);
+		
+		return NULL;
+	}
 	
 	return mat;
 }
@@ -111,40 +134,19 @@ void tdmat_print(TDMAT *tdm)
 		{
 			if (i == j) 
 			{
-				if (tdm->diag[d] == 1.0)
-				{
-					printf("%10d", 1);
-					d++;
-				} else
-				{
 				printf("%10.4f", tdm->diag[d]);
 				d++;
-				}
 			} else if ((j - 1) == i)
 				{
-					if (tdm->Udiag[Ud] == 0.0)
-					{
-						printf("%10d", 0);
-						Ud++;
-					} else
-						{
-							printf("%10.4f", tdm->Udiag[Ud]);
-							Ud++;
-						}
+					printf("%10.4f", tdm->Udiag[Ud]);
+					Ud++;
 				} else if ((j + 1) == i)
 					{
-						if (tdm->Ldiag[Ld] == 0.0)
-						{
-							printf("%10d", 0);
-							Ld++;
-						} else
-							{
-								printf("%10.4f", tdm->Ldiag[Ld]);
-								Ld++;
-							}
+						printf("%10.4f", tdm->Ldiag[Ld]);
+						Ld++;
 					} else
 						{
-							printf("%10d", 0);
+							printf("%10.4f", 0.0);
 						}
 		}
 		printf("\n");
@@ -160,13 +162,7 @@ void mat_print(MAT *mat)
 	{
 		for (j = 0; j < mat->size; j++)
 		{
-			if (mat->elem[i * mat->size + j] == 0.0)
-			{
-				printf("%10d", 0);
-			} else
-			{
-				printf("%10.4f", mat->elem[i * mat->size + j]);
-			}
+			printf("%10.4f", mat->elem[i * mat->size + j]);
 		}
 		printf("\n");
 	}
@@ -187,7 +183,7 @@ float mat_permanent(MAT *mat) // vypocet permanentu "obycajnej" matice
 			if (mat->elem[col] != 0) // ak prvok matice [0, col] == 0, tak netreba nic pocitat
 			{
 			MAT *minorMat;
-			minorMat = mat_create(mat->size - 1);
+			minorMat = mat_create(mat->size - 1); // # este doplnit varovnu spravu, ak minorMat == NULL
 			
 			minorMatIndex = 0;
 			
@@ -226,7 +222,7 @@ float tdmat_permanent(TDMAT *tdm) // vypocet permanentu tridiagonalnej matice
 		for (col = 0; col < 2; col++) // cyklus pre rozvoj
 		{
 			MAT *mat; 
-			mat = mat_create(tdm->size - 1); // vytvorenie obycajnej matice, do ktorej sa ulozi "minor matica" tridiagonalnej matice "tdm"
+			mat = mat_create(tdm->size - 1); // #aj tu este doplnil varovnu spravu pre pripad NULL
 			
 			for (i = 1; i < tdm->size; i++)
 			{
