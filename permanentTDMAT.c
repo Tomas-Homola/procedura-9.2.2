@@ -180,11 +180,13 @@ float mat_permanent(MAT *mat) // vypocet permanentu "obycajnej" matice
 		
 		for (col = 0; col < mat->size; col++)
 		{
-			if (mat->elem[col] != 0) // ak prvok matice [0, col] == 0, tak netreba nic pocitat
+			if (mat->elem[col] != 0.0) // ak prvok matice [0, col] == 0, tak netreba nic pocitat; # tu k tomuto sa este treba vratit -> prepisat podmienku vhodnejsim sposobom
 			{
 			MAT *minorMat;
-			minorMat = mat_create(mat->size - 1); // # este doplnit varovnu spravu, ak minorMat == NULL
+			minorMat = mat_create(mat->size - 1);
 			
+			//if (minorMat == NULL) return ??? ## vymysliet, co rozemne to ma vratit
+						
 			minorMatIndex = 0;
 			
 			for (i = 1; i < mat->size; i++)
@@ -222,7 +224,9 @@ float tdmat_permanent(TDMAT *tdm) // vypocet permanentu tridiagonalnej matice
 		for (col = 0; col < 2; col++) // cyklus pre rozvoj
 		{
 			MAT *mat; 
-			mat = mat_create(tdm->size - 1); // #aj tu este doplnil varovnu spravu pre pripad NULL
+			mat = mat_create(tdm->size - 1);
+			
+			//## podobne aj tu, if (mat == NULL) return ???
 			
 			for (i = 1; i < tdm->size; i++)
 			{
