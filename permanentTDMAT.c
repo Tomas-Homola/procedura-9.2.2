@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+
+#define EPSILON 0.000000001
 
 typedef struct // riedka reprezentacia matice
 {
@@ -139,17 +142,17 @@ void tdmat_print(TDMAT *tdm)
 			}
 			else if ((j - 1) == i)
 			{
-					printf("%10.4f", tdm->Udiag[Ud]);
-					Ud++;
+				printf("%10.4f", tdm->Udiag[Ud]);
+				Ud++;
 			}
 			else if ((j + 1) == i)
 			{
-					printf("%10.4f", tdm->Ldiag[Ld]);
-					Ld++;
+				printf("%10.4f", tdm->Ldiag[Ld]);
+				Ld++;
 			}
 			else
 			{
-				printf("%10.4f", 0.0);
+				printf("%10d", 0);
 			}
 		}
 		printf("\n");
@@ -183,7 +186,7 @@ float mat_permanent(MAT *mat) // vypocet permanentu "obycajnej" matice
 		
 		for (col = 0; col < mat->size; col++)
 		{
-			if (mat->elem[col] != 0.0) // ak prvok matice [0, col] == 0, tak netreba nic pocitat; # tu k tomuto sa este treba vratit -> prepisat podmienku vhodnejsim sposobom
+			if (fabsf(mat->elem[col]) > EPSILON) // ak prvok matice [0, col] = 0, tak netreba nic pocitat
 			{
 			MAT *minorMat;
 			minorMat = mat_create(mat->size - 1);
