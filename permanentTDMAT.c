@@ -1,6 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+<<<<<<< HEAD
+=======
+
+#define EPSILON 0.000000001
+>>>>>>> branch 'master' of https://github.com/Tomas-Homola/procedura-9.2.2.git
 
 #define EPSILON 0.000000001
 
@@ -186,7 +191,11 @@ float mat_permanent(MAT *mat)	// vypocet permanentu "obycajnej" matice
 
 		for (col = 0; col < mat->size; col++)
 		{
+<<<<<<< HEAD
 			if (fabsf(mat->elem[col]) > EPSILON)	// ak prvok matice [0, col] = 0, netreba nic pocitat
+=======
+			if (fabsf(mat->elem[col]) > EPSILON) // ak prvok matice [0, col] = 0, tak netreba nic pocitat
+>>>>>>> branch 'master' of https://github.com/Tomas-Homola/procedura-9.2.2.git
 			{
 				MAT *minorMat;
 				minorMat = mat_create(mat->size - 1);
