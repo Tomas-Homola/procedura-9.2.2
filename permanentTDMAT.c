@@ -136,18 +136,21 @@ void tdmat_print(TDMAT *tdm)
 			{
 				printf("%10.4f", tdm->diag[d]);
 				d++;
-			} else if ((j - 1) == i)
-				{
+			}
+			else if ((j - 1) == i)
+			{
 					printf("%10.4f", tdm->Udiag[Ud]);
 					Ud++;
-				} else if ((j + 1) == i)
-					{
-						printf("%10.4f", tdm->Ldiag[Ld]);
-						Ld++;
-					} else
-						{
-							printf("%10.4f", 0.0);
-						}
+			}
+			else if ((j + 1) == i)
+			{
+					printf("%10.4f", tdm->Ldiag[Ld]);
+					Ld++;
+			}
+			else
+			{
+				printf("%10.4f", 0.0);
+			}
 		}
 		printf("\n");
 	}
@@ -245,34 +248,38 @@ float tdmat_permanent(TDMAT *tdm) // vypocet permanentu tridiagonalnej matice
 							
 							if (helpLd == 0) Ld++;
 							
-						} else if ((j - 1) == i) // prvok superdiagonaly
-							{
-								mat->elem[indexMat] = tdm->Udiag[Ud];
-								indexMat++;
-								Ud++;
-								helpUd++;
+						}
+						else if ((j - 1) == i) // prvok superdiagonaly
+						{
+							mat->elem[indexMat] = tdm->Udiag[Ud];
+							indexMat++;
+							Ud++;
+							helpUd++;
 								
-								if (helpd == 0) d++;
+							if (helpd == 0) d++;
 								
-							} else if ((j + 1) == i) // prvok subdiagonaly
-								{
-									mat->elem[indexMat] = tdm->Ldiag[Ld];
-									indexMat++;
-									Ld++;
-									helpLd++;
-								} else // inak nula
-									{
-										mat->elem[indexMat] = 0.0;
-										indexMat++;
+						}
+						else if ((j + 1) == i) // prvok subdiagonaly
+						{
+							mat->elem[indexMat] = tdm->Ldiag[Ld];
+							indexMat++;
+							Ld++;
+							helpLd++;
+						}
+						else // inak nula
+						{
+							mat->elem[indexMat] = 0.0;
+							indexMat++;
 										
-										if ((tdm->size % 2) == 0) // kontrola pre spravne posuvanie Ud indexu
-										{
-											if ((helpUd == 0) && (j > (tdm->size / 2))) Ud++;
-										} else 
-											{
-												if ((helpUd == 0) && (j > ((tdm->size / 2) + 1))) Ud++;
-											}
-									}
+							if ((tdm->size % 2) == 0) // kontrola pre spravne posuvanie Ud indexu
+							{
+								if ((helpUd == 0) && (j > (tdm->size / 2))) Ud++;
+							}
+							else 
+							{
+								if ((helpUd == 0) && (j > ((tdm->size / 2) + 1))) Ud++;
+							}
+						}
 					
 					if (Ld == (tdm->size - 1)) Ld = 0;
 					
