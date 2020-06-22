@@ -4,7 +4,7 @@
 
 #define EPSILON 0.000000001
 
-typedef struct					// riedka reprezentacia matice
+typedef struct	// riedka reprezentacia matice
 {
 	unsigned int size;
 	float *Udiag;
@@ -12,7 +12,7 @@ typedef struct					// riedka reprezentacia matice
 	float *Ldiag;
 } TDMAT;
 
-typedef struct					// husta reprezentacia matice
+typedef struct	// husta reprezentacia matice
 {
 	unsigned int size;
 	float *elem;
@@ -82,7 +82,7 @@ void tdmat_destroy(TDMAT *tdm)	// "vycistenie miesta" po tridiagonalnej matici
 	free(tdm);
 }
 
-void mat_destroy(MAT *mat)		// "vycistenie miesta" po obycajnej matici
+void mat_destroy(MAT *mat)	// "vycistenie miesta" po obycajnej matici
 {
 	free(mat->elem);
 
