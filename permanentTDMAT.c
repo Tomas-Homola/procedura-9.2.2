@@ -21,7 +21,8 @@ typedef struct	// husta reprezentacia matice
 TDMAT *tdmat_create_with_type(unsigned int size)	// vytvorenie miesta pre tridiagonalnu maticu
 {
 	TDMAT *tdm = (TDMAT *) malloc(sizeof(TDMAT));
-	if (tdm == NULL) return NULL;
+	if (tdm == NULL)
+		return NULL;
 
 	tdm->size = size;
 
@@ -58,7 +59,8 @@ TDMAT *tdmat_create_with_type(unsigned int size)	// vytvorenie miesta pre tridia
 MAT *mat_create(unsigned int size)	// obycajna reprezentacia matice
 {
 	MAT *mat = (MAT *) malloc(sizeof(MAT));
-	if (mat == NULL) return NULL;
+	if (mat == NULL)
+		return NULL;
 
 	mat->size = size;
 
@@ -176,14 +178,15 @@ void mat_print(MAT *mat)
 
 float mat_permanent(MAT *mat)	// vypocet permanentu "obycajnej" matice
 {
+	int i, j, col = 0, minorMatIndex;
 	float permanent = 0.0;
 
-	if (mat->size == 1) return mat->elem[0];
-	else if (mat->size == 2) return (mat->elem[0] * mat->elem[3] + mat->elem[2] * mat->elem[1]);
+	if (mat->size == 1)
+		return mat->elem[0];
+	else if (mat->size == 2)
+		return (mat->elem[0] * mat->elem[3] + mat->elem[2] * mat->elem[1]);
 	else
 	{
-		int i, j, col = 0, minorMatIndex = 0;
-
 		for (col = 0; col < mat->size; col++)
 		{
 			if (fabsf(mat->elem[col]) > EPSILON)	// ak prvok matice [0, col] = 0, netreba nic pocitat
@@ -218,14 +221,15 @@ float mat_permanent(MAT *mat)	// vypocet permanentu "obycajnej" matice
 
 float tdmat_permanent(TDMAT *tdm)	// vypocet permanentu tridiagonalnej matice
 {
+	int i, j, col, indexMat = 0, d = 1, Ud = 1, Ld = 0, helpd, helpUd, helpLd;
 	float permanent = 0.0;
 
-	if (tdm->size == 1) return tdm->diag[0];
-	else if (tdm->size == 2) return (tdm->diag[0] * tdm->diag[1] + tdm->Ldiag[0] * tdm->Udiag[0]);
+	if (tdm->size == 1)
+		return tdm->diag[0];
+	else if (tdm->size == 2)
+		return (tdm->diag[0] * tdm->diag[1] + tdm->Ldiag[0] * tdm->Udiag[0]);
 	else
 	{
-		int i, j, col, indexMat = 0, d = 1, Ud = 1, Ld = 0, helpd, helpUd, helpLd;
-
 		for (col = 0; col < 2; col++)	// cyklus pre rozvoj
 		{
 			MAT *mat;
@@ -248,7 +252,8 @@ float tdmat_permanent(TDMAT *tdm)	// vypocet permanentu tridiagonalnej matice
 							d++;
 							helpd++;	// d bolo zmenene
 
-							if (helpLd == 0) Ld++;
+							if (helpLd == 0)
+								Ld++;
 						}
 						else if ((j - 1) == i)	// prvok superdiagonaly
 						{
@@ -257,7 +262,8 @@ float tdmat_permanent(TDMAT *tdm)	// vypocet permanentu tridiagonalnej matice
 							Ud++;
 							helpUd++;
 
-							if (helpd == 0) d++;
+							if (helpd == 0)
+								d++;
 						}
 						else if ((j + 1) == i)	// prvok subdiagonaly
 						{
@@ -273,25 +279,32 @@ float tdmat_permanent(TDMAT *tdm)	// vypocet permanentu tridiagonalnej matice
 
 							if ((tdm->size % 2) == 0)	// kontrola pre spravne posuvanie Ud indexu
 							{
-								if ((helpUd == 0) && (j > (tdm->size / 2))) Ud++;
+								if ((helpUd == 0) && (j > (tdm->size / 2)))
+									Ud++;
 							}
 							else
 							{
-								if ((helpUd == 0) && (j > ((tdm->size / 2) + 1))) Ud++;
+								if ((helpUd == 0) && (j > ((tdm->size / 2) + 1)))
+									Ud++;
 							}
 						}
 
-						if (Ld == (tdm->size - 1)) Ld = 0;
+						if (Ld == (tdm->size - 1))
+							Ld = 0;
 
-						if (d == tdm->size) d = 1;
+						if (d == tdm->size)
+							d = 1;
 
-						if (Ud == (tdm->size - 1)) Ud = 1;
+						if (Ud == (tdm->size - 1))
+							Ud = 1;
 					}
 				}
 			}
 
-			if (col == 0) permanent += tdm->diag[0] * mat_permanent(mat);
-			else if (col == 1) permanent += tdm->Udiag[0] * mat_permanent(mat);
+			if (col == 0)
+				permanent += tdm->diag[0] * mat_permanent(mat);
+			else if (col == 1)
+				permanent += tdm->Udiag[0] * mat_permanent(mat);
 
 			mat_destroy(mat);
 
